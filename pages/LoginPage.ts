@@ -8,6 +8,9 @@ export class LoginPage extends BasePage{
         await this.page.getByPlaceholder('Enter your password').fill(password)
         await this.page.getByRole("button",{name:'Sign In' , exact:false}).click()
     }
+    async forgetpassword(){
+        await this.page.getByRole("button",{name :'Forgot password?'}).click()
+    }
 
 
 }
