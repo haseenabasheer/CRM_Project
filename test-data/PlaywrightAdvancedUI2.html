@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧪 Test Practice Lab · Fixed</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #f0f4f8;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      padding: 2rem 1.5rem;
+      color: #0f172a;
+    }
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .lab-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+    .lab-header h1 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(145deg, #0f172a, #334155);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .badge-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: #e2e8f0;
+      padding: 0.25rem 1rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .badge.primary { background: #dbeafe; color: #1e40af; }
+    .badge.success { background: #d1fae5; color: #065f46; }
+    .badge.warning { background: #fef3c7; color: #92400e; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 1.8rem;
+      margin-top: 1rem;
+    }
+    .card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      border: 1px solid #e2e8f0;
+      transition: 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover { border-color: #cbd5e1; box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
+    .card-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title .status-pill {
+      font-size: 0.65rem;
+      background: #f1f5f9;
+      padding: 0.15rem 0.9rem;
+      border-radius: 30px;
+      color: #475569;
+      font-weight: 400;
+    }
+    .btn {
+      background: #1e293b;
+      border: none;
+      color: white;
+      padding: 0.45rem 1.2rem;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+    .btn:hover:not(:disabled) { background: #0f172a; transform: scale(0.97); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn.outline {
+      background: transparent;
+      color: #1e293b;
+      border-color: #d1d9e6;
+    }
+    .btn.outline:hover:not(:disabled) { background: #f1f5f9; }
+    .btn.success { background: #0b6e4f; }
+    .btn.success:hover:not(:disabled) { background: #065f46; }
+    .btn.danger { background: #b91c1c; }
+    .btn.danger:hover:not(:disabled) { background: #991b1b; }
+    .btn-sm { padding: 0.25rem 0.8rem; font-size: 0.7rem; }
+
+    /* Dynamic */
+    .dynamic-box {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 1.2rem;
+      text-align: center;
+      border: 2px solid #e2e8f0;
+      transition: 0.2s;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .dynamic-box .value { font-size: 2.5rem; font-weight: 700; color: #0f172a; }
+    .dynamic-box .spinner {
+      display: none;
+      width: 28px;
+      height: 28px;
+      border: 3px solid #e2e8f0;
+      border-top: 3px solid #1e293b;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+    .dynamic-box.loading .spinner { display: block; }
+    .dynamic-box.loading .value { display: none; }
+    .dynamic-box.loading { border-color: #f59e0b; background: #fffbeb; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Form */
+    .test-form { display: flex; flex-direction: column; gap: 0.7rem; }
+    .test-form label { font-size: 0.85rem; font-weight: 500; color: #334155; }
+    .test-form input, .test-form select {
+      padding: 0.6rem 1rem;
+      border-radius: 60px;
+      border: 2px solid #e2e8f0;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      width: 100%;
+      background: #fafcfd;
+    }
+    .test-form input:focus, .test-form select:focus {
+      outline: none;
+      border-color: #94a3b8;
+    }
+    .test-form input.error { border-color: #b91c1c; background: #fef2f2; }
+    .test-form .error-msg {
+      color: #b91c1c;
+      font-size: 0.75rem;
+      display: none;
+      padding-left: 0.5rem;
+    }
+    .test-form .error-msg.show { display: block; }
+
+    /* Alerts */
+    .alert-area {
+      background: #fef9e7;
+      border-radius: 18px;
+      padding: 1rem;
+      border-left: 5px solid #f59e0b;
+    }
+
+    /* Tabs */
+    .tab-wrapper {
+      display: flex;
+      gap: 0.3rem;
+      background: #f1f5f9;
+      padding: 0.3rem;
+      border-radius: 60px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0.4rem 0.2rem;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+      color: #475569;
+      min-width: 60px;
+    }
+    .tab-btn.active {
+      background: white;
+      color: #0f172a;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .tab-content {
+      background: #fafcfd;
+      border-radius: 18px;
+      padding: 1rem;
+      min-height: 80px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Scroll */
+    .scroll-container {
+      height: 140px;
+      overflow-y: auto;
+      background: #fafcfd;
+      border-radius: 18px;
+      padding: 0.8rem 1rem;
+      border: 2px solid #e2e8f0;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .scroll-container p { padding: 0.2rem 0; border-bottom: 1px solid #f1f5f9; }
+
+    /* Network */
+    .network-status {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #f1f5f9;
+      padding: 0.3rem 1rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      display: inline-block;
+      transition: 0.3s;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+    }
+    .dot.off { background: #94a3b8; box-shadow: none; }
+    .dot.mocked { background: #f59e0b; box-shadow: 0 0 8px rgba(245, 158, 11, 0.3); }
+
+    /* Auth */
+    .auth-token {
+      font-family: 'Courier New', monospace;
+      background: #f1f5f9;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      word-break: break-all;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+    .modal-overlay.show { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 28px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-box .modal-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #1e293b;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 60px;
+      font-size: 0.85rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 2000;
+      max-width: 450px;
+      animation: slideIn 0.3s ease;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .toast.show { display: flex; }
+    .toast .toast-close {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 0.2rem 0.6rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      transition: 0.15s;
+    }
+    .toast .toast-close:hover { background: rgba(255,255,255,0.2); }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Shadow DOM */
+    .shadow-host {
+      padding: 0.5rem 1rem;
+      background: #f1f5f9;
+      border-radius: 18px;
+      margin-top: 0.5rem;
+      border: 2px dashed #cbd5e1;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .shadow-host:hover { border-color: #94a3b8; background: #f8fafc; }
+
+    /* Toggle target */
+    .toggle-target {
+      margin-top: 0.8rem;
+      padding: 0.8rem;
+      border-radius: 18px;
+      text-align: center;
+      transition: 0.3s;
+      border: 2px solid #dbeafe;
+      background: #eff6ff;
+      font-weight: 500;
+    }
+    .toggle-target.hidden {
+      display: none;
+    }
+
+    /* Race conditions */
+    .race-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,23,42,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 60px;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+    .race-overlay.fade { opacity: 0; pointer-events: none; }
+
+    iframe {
+      width: 100%;
+      height: 150px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      background: white;
+      transition: 0.2s;
+    }
+    iframe:hover { border-color: #94a3b8; }
+
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+      .lab-header { flex-direction: column; align-items: start; }
+      .tab-wrapper { flex-wrap: wrap; }
+      .tab-btn { flex: 1 1 auto; min-width: 50px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="lab-header">
+    <h1>🧪 Test Practice Lab · Fixed</h1>
+    <div class="badge-group">
+      <span class="badge primary">dynamic</span>
+      <span class="badge success">async</span>
+      <span class="badge warning">network</span>
+      <span class="badge">iframe</span>
+      <span class="badge">shadow</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- 1. DYNAMIC -->
+    <div class="card">
+      <div class="card-title">
+        🔄 Dynamic Elements
+        <span class="status-pill" id="dynamicPill" data-testid="dynamicPill">ready</span>
+      </div>
+      <div class="dynamic-box" id="dynamicBox" data-testid="dynamicBox">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="value" id="dynamicValue" data-testid="dynamicValue" aria-live="polite" aria-atomic="true">42</div>
+        <div style="margin-top:0.8rem; display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:center;">
+          <button class="btn outline btn-sm" id="changeDynamicBtn" data-testid="changeDynamicBtn">🔄 Change</button>
+          <button class="btn outline btn-sm" id="resetDynamicBtn" data-testid="resetDynamicBtn">↺ Reset</button>
+        </div>
+        <div style="margin-top:0.6rem; font-size:0.75rem; color:#64748b;">
+          <span id="dynamicHint" data-testid="dynamicHint">Click "Change" to simulate async update</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. FORM -->
+    <div class="card">
+      <div class="card-title">📝 Form & Validation <span class="status-pill">assertions</span></div>
+      <div class="test-form">
+        <label for="usernameInput">Username (min 3 chars)</label>
+        <input type="text" id="usernameInput" data-testid="usernameInput" placeholder="e.g. testuser" value="playwright" aria-invalid="false" aria-describedby="usernameError" />
+        <div class="error-msg" id="usernameError" data-testid="usernameError" role="alert">❌ Username must be at least 3 characters</div>
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+          <select id="roleSelect" data-testid="roleSelect" style="flex:1; min-width:100px;">
+            <option value="admin">Admin</option>
+            <option value="editor" selected>Editor</option>
+            <option value="viewer">Viewer</option>
+          </select>
+          <button class="btn" id="submitFormBtn" data-testid="submitFormBtn">Submit</button>
+        </div>
+        <div style="background:#f8fafc; padding:0.6rem 1rem; border-radius:60px; font-size:0.85rem; border:1px solid #e2e8f0;">
+          <span id="formResult" data-testid="formResult">👤 editor · playwright</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. ALERTS -->
+    <div class="card">
+      <div class="card-title">⚠️ Alerts & Dialogs <span class="status-pill" id="dialogModePill" data-testid="dialogModePill">manual</span></div>
+      <div class="alert-area">
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.6rem;">
+          <button class="btn outline btn-sm" id="alertBtn" data-testid="alertBtn">🔔 Alert</button>
+          <button class="btn outline btn-sm" id="confirmBtn" data-testid="confirmBtn">✅ Confirm</button>
+          <button class="btn outline btn-sm" id="promptBtn" data-testid="promptBtn">📝 Prompt</button>
+        </div>
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; margin-bottom:0.6rem;">
+          <button class="btn outline btn-sm" id="autoAcceptBtn" data-testid="autoAcceptBtn" style="font-size:0.7rem;">🤖 Auto-accept OFF</button>
+          <span style="font-size:0.7rem; color:#64748b;">(auto-handle dialogs)</span>
+        </div>
+        <div style="font-size:0.85rem; color:#334155; background:white; padding:0.4rem 0.8rem; border-radius:40px;">
+          last: <span id="alertResult" data-testid="alertResult">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. TABS -->
+    <div class="card">
+      <div class="card-title">📑 Tabs <span class="status-pill" id="tabCounter" data-testid="tabCounter">Tab A</span></div>
+      <div class="tab-wrapper" id="tabWrapper" data-testid="tabWrapper" role="tablist">
+        <button class="tab-btn active" data-tab="tab1" role="tab" aria-selected="true" data-testid="tab-tab1">Tab A</button>
+        <button class="tab-btn" data-tab="tab2" role="tab" aria-selected="false" data-testid="tab-tab2">Tab B</button>
+        <button class="tab-btn" data-tab="tab3" role="tab" aria-selected="false" data-testid="tab-tab3">Tab C</button>
+      </div>
+      <div class="tab-content" id="tabContent" data-testid="tabContent" role="tabpanel">
+        <p id="tabContentText" data-testid="tabContentText">Content of Tab A — you can switch tabs.</p>
+        <button class="btn outline btn-sm" id="newTabBtn" data-testid="newTabBtn" style="margin-top:0.5rem;">➕ New Tab</button>
+      </div>
+    </div>
+
+    <!-- 5. SCROLL -->
+    <div class="card">
+      <div class="card-title">📜 Scroll & Load <span class="status-pill" id="itemCount" data-testid="itemCount">5 items</span></div>
+      <div class="scroll-container" id="scrollContainer" data-testid="scrollContainer">
+        <p>🟢 Line 1 — scroll me</p>
+        <p>🟡 Line 2 — more content</p>
+        <p>🔵 Line 3 — testing scroll</p>
+        <p>🟣 Line 4 — almost there</p>
+        <p>🟠 Line 5 — bottom!</p>
+      </div>
+      <div style="margin-top:0.6rem; display:flex; gap:0.4rem; flex-wrap:wrap;">
+        <button class="btn outline btn-sm" id="scrollToBottomBtn" data-testid="scrollToBottomBtn">⬇ Bottom</button>
+        <button class="btn outline btn-sm" id="scrollToTopBtn" data-testid="scrollToTopBtn">⬆ Top</button>
+        <button class="btn outline btn-sm" id="loadMoreBtn" data-testid="loadMoreBtn">➕ Load 3 more</button>
+      </div>
+      <div style="font-size:0.7rem; color:#64748b; margin-top:0.4rem;">
+        scroll: <span id="scrollPos" data-testid="scrollPos">0</span>px
+      </div>
+    </div>
+
+    <!-- 6. NETWORK - FIXED -->
+    <div class="card">
+      <div class="card-title">🌐 Network <span class="status-pill" id="networkStatusPill" data-testid="networkStatusPill">online</span></div>
+      <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.6rem;">
+        <span class="network-status"><span class="dot" id="networkDot" data-testid="networkDot"></span> <span id="networkLabel" data-testid="networkLabel">online</span></span>
+        <button class="btn outline btn-sm" id="mockApiBtn" data-testid="mockApiBtn">🔀 Mock /api/users</button>
+        <button class="btn outline btn-sm" id="resetNetworkBtn" data-testid="resetNetworkBtn">↺ Reset</button>
+      </div>
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.6rem;">
+        <button class="btn outline btn-sm" id="fetchUsersBtn" data-testid="fetchUsersBtn">📡 GET /api/users</button>
+      </div>
+      <div style="background:#f8fafc; padding:0.6rem 1rem; border-radius:18px; font-size:0.8rem; min-height:60px; border:1px solid #e2e8f0;">
+        <pre id="networkResponse" data-testid="networkResponse" style="white-space:pre-wrap; margin:0; font-family: inherit;">💬 waiting for request...</pre>
+      </div>
+    </div>
+
+    <!-- 7. AUTH -->
+    <div class="card">
+      <div class="card-title">🔐 Authentication <span class="status-pill" id="authStatusPill" data-testid="authStatusPill">guest</span></div>
+      <div style="display:flex; flex-direction:column; gap:0.5rem;">
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <button class="btn success btn-sm" id="loginBtn" data-testid="loginBtn">🔑 Login</button>
+          <button class="btn outline btn-sm" id="logoutBtn" data-testid="logoutBtn">🚪 Logout</button>
+        </div>
+        <div style="background:#f1f5f9; padding:0.5rem 1rem; border-radius:60px; display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap; border:1px solid #e2e8f0;">
+          <span style="font-weight:500; font-size:0.8rem;">Status:</span>
+          <span id="authStatus" data-testid="authStatus" style="background:#e2e8f0; padding:0.1rem 1rem; border-radius:40px; font-size:0.8rem;">guest</span>
+          <span class="auth-token" id="authTokenDisplay" data-testid="authTokenDisplay" title="Authentication token">—</span>
+        </div>
+        <div id="profileSection" data-testid="profileSection" style="display:none; background:#f0fdf4; padding:0.6rem 1rem; border-radius:18px; font-size:0.85rem; border:1px solid #bbf7d0;">
+          ✅ Logged in as <strong id="profileName" data-testid="profileName">user</strong> (role: <span id="profileRole" data-testid="profileRole">admin</span>)
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. FLAKY -->
+    <div class="card">
+      <div class="card-title">⚙️ Flaky Test <span class="status-pill" id="flakyStatusPill" data-testid="flakyStatusPill">ready</span></div>
+      <div style="display:flex; flex-direction:column; gap:0.6rem;">
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+          <button class="btn outline btn-sm" id="flakyBtn" data-testid="flakyBtn">🚧 Run Flaky Test</button>
+          <button class="btn outline btn-sm" id="resetRetryBtn" data-testid="resetRetryBtn">↺ Reset Stats</button>
+        </div>
+        <div style="background:#f8fafc; padding:0.3rem 1rem; border-radius:60px; font-size:0.8rem; display:flex; gap:1rem; flex-wrap:wrap; border:1px solid #e2e8f0;">
+          <span>Attempts: <strong id="retryCounter" data-testid="retryCounter">0</strong></span>
+          <span>✅ Passed: <strong id="passCounter" data-testid="passCounter">0</strong></span>
+          <span>📊 Rate: <strong id="successRate" data-testid="successRate">0%</strong></span>
+        </div>
+        <div id="retryMessage" data-testid="retryMessage" style="font-size:0.8rem; color:#475569; padding:0.3rem 0.8rem; background:#f1f5f9; border-radius:40px;">ready</div>
+      </div>
+    </div>
+
+    <!-- 9. VISIBILITY -->
+    <div class="card">
+      <div class="card-title">👁️ Visibility <span class="status-pill" id="visibilityPill" data-testid="visibilityPill">visible</span></div>
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.6rem;">
+        <button class="btn outline btn-sm" id="showModalBtn" data-testid="showModalBtn">📦 Modal</button>
+        <button class="btn outline btn-sm" id="showToastBtn" data-testid="showToastBtn">🍞 Toast</button>
+        <button class="btn outline btn-sm" id="toggleElementBtn" data-testid="toggleElementBtn">🔀 Toggle Element</button>
+      </div>
+      <div class="toggle-target" id="toggleTarget" data-testid="toggleTarget">
+        🟢 I am visible — test visibility assertions
+      </div>
+    </div>
+
+    <!-- 10. IFRAME + SHADOW -->
+    <div class="card">
+      <div class="card-title">🖼️ iframe & Shadow <span class="status-pill" id="shadowPill" data-testid="shadowPill">shadow attached</span></div>
+      <iframe src="https://example.com" id="testIframe" data-testid="testIframe" title="Test iframe"></iframe>
+      <div style="margin-top:0.6rem;">
+        <div style="font-size:0.75rem; color:#64748b; margin-bottom:0.3rem;">⬇ Click the box below to toggle shadow content</div>
+        <div id="shadowHost" data-testid="shadowHost" class="shadow-host">
+          <span>🌑 Click me to toggle shadow content</span>
+        </div>
+        <div id="shadowContent" data-testid="shadowContent" style="margin-top:0.4rem; font-size:0.8rem; color:#475569; padding:0.3rem 0.8rem; background:#f1f5f9; border-radius:40px;">
+          ✅ Shadow root attached — use ::shadow in Playwright
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. RACE CONDITIONS -->
+    <div class="card">
+      <div class="card-title">🏁 Race Conditions <span class="status-pill" id="raceStatusPill" data-testid="raceStatusPill">idle</span></div>
+      <div style="display:flex; flex-direction:column; gap:0.9rem;">
+        <div>
+          <div style="font-size:0.78rem; color:#64748b; margin-bottom:0.5rem;">Double-submit bug: the button is <em>not</em> disabled before the async call resolves. Click it twice fast and watch the count.</div>
+          <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+            <button class="btn danger btn-sm" id="raceSubmitBtn" data-testid="raceSubmitBtn">🛒 Submit Order</button>
+            <span style="font-size:0.8rem;">Submissions: <strong id="raceSubmitCount" data-testid="raceSubmitCount">0</strong></span>
+          </div>
+          <div id="raceSubmitStatus" data-testid="raceSubmitStatus" style="font-size:0.75rem; color:#64748b; margin-top:0.4rem;">ready</div>
+        </div>
+        <div>
+          <div style="font-size:0.78rem; color:#64748b; margin-bottom:0.5rem;">Overlay-intercept: the button below is covered for 800ms. A click during the fade should be blocked by actionability checks unless forced.</div>
+          <div style="position:relative;">
+            <button class="btn outline btn-sm" id="overlayTargetBtn" data-testid="overlayTargetBtn" style="width:100%;">🎯 Click me (guarded by overlay)</button>
+            <div class="race-overlay fade" id="raceOverlay" data-testid="raceOverlay">loading…</div>
+          </div>
+          <button class="btn outline btn-sm" id="triggerOverlayBtn" data-testid="triggerOverlayBtn" style="margin-top:0.5rem;">▶ Trigger overlay (800ms)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. BROWSER CONTEXTS -->
+    <div class="card">
+      <div class="card-title">🪟 Browser Contexts <span class="status-pill">popups · files</span></div>
+      <div style="display:flex; flex-direction:column; gap:0.9rem;">
+        <div>
+          <div style="font-size:0.78rem; color:#64748b; margin-bottom:0.5rem;">Opens a real new tab — practice <code>context.waitForEvent('page')</code>.</div>
+          <a class="btn outline btn-sm" id="popupLink" data-testid="popupLink" href="https://example.com" target="_blank" rel="noopener" style="display:inline-block; text-decoration:none;">🔗 Open in new tab</a>
+        </div>
+        <div>
+          <div style="font-size:0.78rem; color:#64748b; margin-bottom:0.5rem;">Practice <code>setInputFiles()</code>.</div>
+          <input type="file" id="fileUploadInput" data-testid="fileUploadInput" style="font-size:0.8rem;" />
+          <div style="font-size:0.75rem; color:#64748b; margin-top:0.3rem;">Selected: <span id="fileUploadName" data-testid="fileUploadName">no file selected</span></div>
+        </div>
+        <div>
+          <div style="font-size:0.78rem; color:#64748b; margin-bottom:0.5rem;">Triggers a real browser download — practice <code>page.waitForEvent('download')</code>.</div>
+          <button class="btn outline btn-sm" id="downloadFileBtn" data-testid="downloadFileBtn">⬇ Download sample.txt</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. API PLAYGROUND -->
+    <div class="card">
+      <div class="card-title">🧩 API Playground <span class="status-pill" id="apiPlaygroundPill" data-testid="apiPlaygroundPill">no backend</span></div>
+      <div style="font-size:0.78rem; color:#64748b; margin-bottom:0.7rem;">These endpoints have no real backend — they're built for <code>page.route()</code> interception practice (slow responses, 500 errors, pagination), not the app's own mock.</div>
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.6rem;">
+        <button class="btn outline btn-sm" id="apiOrdersBtn" data-testid="apiOrdersBtn">🐢 GET /api/orders (slow)</button>
+        <button class="btn outline btn-sm" id="apiErrorBtn" data-testid="apiErrorBtn">💥 GET /api/error</button>
+        <button class="btn outline btn-sm" id="apiPaginatedBtn" data-testid="apiPaginatedBtn">📄 GET /api/items?page=N</button>
+        <button class="btn outline btn-sm" id="apiPaginatedResetBtn" data-testid="apiPaginatedResetBtn">↺ Reset page</button>
+      </div>
+      <div style="background:#f8fafc; padding:0.6rem 1rem; border-radius:18px; font-size:0.8rem; min-height:60px; border:1px solid #e2e8f0;">
+        <pre id="apiPlaygroundResponse" data-testid="apiPlaygroundResponse" style="white-space:pre-wrap; margin:0; font-family: inherit;">💬 waiting for request...</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modalOverlay" data-testid="modalOverlay">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-icon">📦</div>
+      <h3 id="modalTitle" style="margin-bottom:0.5rem;">Modal Dialog</h3>
+      <p style="color:#475569; margin-bottom:0.5rem;">This modal appears on demand. Test <code>toBeVisible()</code> and <code>toBeHidden()</code>.</p>
+      <p style="font-size:0.8rem; color:#94a3b8; margin-bottom:1rem;">Click outside or press ESC to close</p>
+      <button class="btn" id="closeModalBtn" data-testid="closeModalBtn">Close Modal</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast" data-testid="toast" role="status" aria-live="polite">
+    <span id="toastMessage" data-testid="toastMessage">🍞 Toast message</span>
+    <button class="toast-close" id="toastCloseBtn" data-testid="toastCloseBtn">✕</button>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ---------- TOAST ----------
+      let toastTimer = null;
+      function showToast(msg) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMessage');
+        toastMsg.textContent = msg;
+        toast.classList.add('show');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+          toastTimer = null;
+        }, 3000);
+      }
+      document.getElementById('toastCloseBtn').addEventListener('click', function() {
+        document.getElementById('toast').classList.remove('show');
+        if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+      });
+
+      // ---------- 1. DYNAMIC ----------
+      const dynamicBox = document.getElementById('dynamicBox');
+      const dynamicVal = document.getElementById('dynamicValue');
+      const dynamicPill = document.getElementById('dynamicPill');
+      const dynamicHint = document.getElementById('dynamicHint');
+      const changeBtn = document.getElementById('changeDynamicBtn');
+      const resetBtn = document.getElementById('resetDynamicBtn');
+      let isLoading = false;
+
+      function updateDynamic(newVal, hintMsg) {
+        if (isLoading) return;
+        isLoading = true;
+        dynamicBox.classList.add('loading');
+        dynamicPill.textContent = 'loading...';
+        dynamicPill.style.color = '#f59e0b';
+        changeBtn.disabled = true;
+        resetBtn.disabled = true;
+
+        setTimeout(() => {
+          dynamicVal.textContent = newVal;
+          dynamicBox.classList.remove('loading');
+          dynamicPill.textContent = 'ready';
+          dynamicPill.style.color = '#22c55e';
+          dynamicHint.textContent = hintMsg || ('✅ Updated to ' + newVal);
+          isLoading = false;
+          changeBtn.disabled = false;
+          resetBtn.disabled = false;
+          showToast(`✅ Value changed to ${newVal}`);
+        }, 300 + Math.floor(Math.random() * 900)); // variable latency: 300–1200ms, forces real waiting instead of fixed sleeps
+      }
+
+      changeBtn.addEventListener('click', function() {
+        updateDynamic(Math.floor(Math.random() * 100) + 1);
+      });
+      resetBtn.addEventListener('click', function() {
+        updateDynamic(42, '↺ Reset to 42');
+      });
+
+      // ---------- 2. FORM ----------
+      const usernameInput = document.getElementById('usernameInput');
+      const usernameError = document.getElementById('usernameError');
+      const roleSelect = document.getElementById('roleSelect');
+      const formResult = document.getElementById('formResult');
+
+      usernameError.classList.remove('show');
+
+      function validateUsername() {
+        const val = usernameInput.value.trim();
+        if (val.length < 3) {
+          usernameError.classList.add('show');
+          usernameInput.classList.add('error');
+          usernameInput.setAttribute('aria-invalid', 'true');
+          return false;
+        }
+        usernameError.classList.remove('show');
+        usernameInput.classList.remove('error');
+        usernameInput.setAttribute('aria-invalid', 'false');
+        return true;
+      }
+      usernameInput.addEventListener('input', validateUsername);
+
+      document.getElementById('submitFormBtn').addEventListener('click', function() {
+        if (!validateUsername()) {
+          showToast('❌ Please fix validation errors');
+          return;
+        }
+        const name = usernameInput.value.trim();
+        const role = roleSelect.value;
+        formResult.textContent = `👤 ${role} · ${name}`;
+        showToast('✅ Form submitted successfully!');
+      });
+
+      // ---------- 3. ALERTS ----------
+      const alertResult = document.getElementById('alertResult');
+      const dialogModePill = document.getElementById('dialogModePill');
+      let dialogAutoAccept = false;
+      const autoAcceptBtn = document.getElementById('autoAcceptBtn');
+
+      autoAcceptBtn.addEventListener('click', function() {
+        dialogAutoAccept = !dialogAutoAccept;
+        this.textContent = dialogAutoAccept ? '🤖 Auto-accept ON' : '🤖 Auto-accept OFF';
+        this.style.background = dialogAutoAccept ? '#d1fae5' : 'transparent';
+        dialogModePill.textContent = dialogAutoAccept ? 'auto' : 'manual';
+        dialogModePill.style.background = dialogAutoAccept ? '#d1fae5' : '#f1f5f9';
+        showToast(dialogAutoAccept ? '🤖 Auto-accept enabled' : '👤 Manual mode');
+      });
+
+      function handleDialog(type, message) {
+        if (dialogAutoAccept) {
+          alertResult.textContent = `✅ auto-${type}: ${message || ''}`;
+          showToast(`✅ Auto-${type} accepted`);
+          return type === 'confirm' ? true : (type === 'prompt' ? 'auto-value' : undefined);
+        }
+        if (type === 'alert') {
+          alert(message);
+          alertResult.textContent = 'alert shown';
+        } else if (type === 'confirm') {
+          const res = confirm(message);
+          alertResult.textContent = res ? '✅ confirmed' : '❌ cancelled';
+          showToast(res ? '✅ Confirmed' : '❌ Cancelled');
+          return res;
+        } else if (type === 'prompt') {
+          const val = prompt(message);
+          alertResult.textContent = val !== null ? `📝 "${val}"` : '🚫 cancelled';
+          showToast(val !== null ? `📝 Prompt: "${val}"` : '🚫 Prompt cancelled');
+          return val;
+        }
+      }
+
+      document.getElementById('alertBtn').addEventListener('click', function() {
+        handleDialog('alert', '🧪 This is a Playwright alert test!');
+      });
+      document.getElementById('confirmBtn').addEventListener('click', function() {
+        handleDialog('confirm', 'Confirm action? (test confirm)');
+      });
+      document.getElementById('promptBtn').addEventListener('click', function() {
+        handleDialog('prompt', 'Enter something (test prompt):');
+      });
+
+      // ---------- 4. TABS ----------
+      const tabWrapper = document.getElementById('tabWrapper');
+      const tabContentText = document.getElementById('tabContentText');
+      const tabCounter = document.getElementById('tabCounter');
+      let tabData = {
+        tab1: '📄 Content of Tab A — you can switch tabs.',
+        tab2: '📄 Content of Tab B — different data here.',
+        tab3: '📄 Content of Tab C — final tab.',
+      };
+      let tabIdCounter = 3;
+
+      function switchTab(tabId) {
+        const allBtns = tabWrapper.querySelectorAll('.tab-btn');
+        allBtns.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        const activeBtn = tabWrapper.querySelector(`[data-tab="${tabId}"]`);
+        if (activeBtn) {
+          activeBtn.classList.add('active');
+          activeBtn.setAttribute('aria-selected', 'true');
+          tabContentText.textContent = tabData[tabId] || 'Content not found';
+          tabCounter.textContent = activeBtn.textContent.trim();
+        }
+      }
+
+      tabWrapper.addEventListener('click', function(e) {
+        const btn = e.target.closest('.tab-btn');
+        if (btn && btn.dataset.tab) {
+          switchTab(btn.dataset.tab);
+        }
+      });
+
+      document.getElementById('newTabBtn').addEventListener('click', function() {
+        tabIdCounter++;
+        const newTabId = 'tab' + tabIdCounter;
+        tabData[newTabId] = `📄 New tab ${tabIdCounter} content (simulated)`;
+        const newBtn = document.createElement('button');
+        newBtn.className = 'tab-btn';
+        newBtn.dataset.tab = newTabId;
+        newBtn.setAttribute('role', 'tab');
+        newBtn.setAttribute('aria-selected', 'false');
+        newBtn.setAttribute('data-testid', `tab-${newTabId}`);
+        newBtn.textContent = `Tab ${String.fromCharCode(64 + tabIdCounter)}`;
+        tabWrapper.appendChild(newBtn);
+        switchTab(newTabId);
+        showToast(`✅ New tab "${newBtn.textContent}" created!`);
+      });
+
+      // ---------- 5. SCROLL ----------
+      const scrollContainer = document.getElementById('scrollContainer');
+      const scrollPos = document.getElementById('scrollPos');
+      const itemCount = document.getElementById('itemCount');
+      let itemCounter = 5;
+
+      scrollContainer.addEventListener('scroll', function() {
+        scrollPos.textContent = this.scrollTop;
+      });
+
+      document.getElementById('scrollToBottomBtn').addEventListener('click', function() {
+        scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: 'smooth' });
+      });
+      document.getElementById('scrollToTopBtn').addEventListener('click', function() {
+        scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      document.getElementById('loadMoreBtn').addEventListener('click', function() {
+        const colors = ['🔴', '🟢', '🔵', '🟣', '🟠', '🟡', '⚪', '🔶', '🔷', '🟥'];
+        for (let i = 0; i < 3; i++) {
+          itemCounter++;
+          const p = document.createElement('p');
+          p.textContent = `${colors[i % colors.length]} Line ${itemCounter} — loaded dynamically`;
+          scrollContainer.appendChild(p);
+        }
+        itemCount.textContent = itemCounter + ' items';
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        showToast(`✅ Loaded ${itemCounter} items total`);
+      });
+
+      // ---------- 6. NETWORK (FIXED) ----------
+      const networkResponse = document.getElementById('networkResponse');
+      const networkDot = document.getElementById('networkDot');
+      const networkLabel = document.getElementById('networkLabel');
+      const networkStatusPill = document.getElementById('networkStatusPill');
+      const mockApiBtn = document.getElementById('mockApiBtn');
+      let isMocked = false;
+
+      // Store original fetch
+      const originalFetch = window.fetch;
+
+      // Override fetch with proper mock support
+      window.fetch = function(input, init) {
+        const url = typeof input === 'string' ? input : input.url;
+        
+        // Check if we should mock this request
+        if (isMocked && url && url.includes('/api/users')) {
+          console.log('🔀 Mocking request to:', url);
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            statusText: 'OK',
+            headers: new Headers({ 'Content-Type': 'application/json' }),
+            json: () => Promise.resolve({
+              users: ['alice (mocked)', 'bob (mocked)', 'charlie (mocked)'],
+              mocked: true,
+              timestamp: new Date().toISOString(),
+              message: 'This response is from the mock interceptor'
+            }),
+            text: () => Promise.resolve(JSON.stringify({
+              users: ['alice (mocked)', 'bob (mocked)', 'charlie (mocked)'],
+              mocked: true,
+              timestamp: new Date().toISOString(),
+              message: 'This response is from the mock interceptor'
+            })),
+            clone: function() { return this; }
+          });
+        }
+        
+        // Pass through to original fetch for non-mocked requests
+        return originalFetch.call(window, input, init);
+      };
+
+      mockApiBtn.addEventListener('click', function() {
+        isMocked = !isMocked;
+        if (isMocked) {
+          networkDot.className = 'dot mocked';
+          networkLabel.textContent = 'mocked';
+          networkStatusPill.textContent = 'mocked';
+          networkStatusPill.style.background = '#fef3c7';
+          networkStatusPill.style.color = '#92400e';
+          this.textContent = '🔀 Mock ON';
+          this.style.background = '#fef3c7';
+          this.style.borderColor = '#f59e0b';
+          showToast('🔀 Network mocking enabled');
+          networkResponse.textContent = '🔀 Mock enabled — click "GET /api/users" to see mocked data';
+        } else {
+          networkDot.className = 'dot';
+          networkLabel.textContent = 'online';
+          networkStatusPill.textContent = 'online';
+          networkStatusPill.style.background = '#f1f5f9';
+          networkStatusPill.style.color = '#475569';
+          this.textContent = '🔀 Mock /api/users';
+          this.style.background = 'transparent';
+          this.style.borderColor = '#d1d9e6';
+          showToast('🌐 Network restored');
+          networkResponse.textContent = '💬 waiting for request...';
+        }
+      });
+
+      document.getElementById('resetNetworkBtn').addEventListener('click', function() {
+        networkResponse.textContent = '💬 waiting for request...';
+        showToast('🔄 Response cleared');
+      });
+
+      document.getElementById('fetchUsersBtn').addEventListener('click', async function() {
+        networkResponse.textContent = '⏳ fetching from ' + (isMocked ? 'MOCK' : 'LIVE') + '...';
+        try {
+          const res = await fetch('/api/users');
+          const data = await res.json();
+          networkResponse.textContent = JSON.stringify(data, null, 2);
+          showToast('✅ Data fetched ' + (isMocked ? '(mocked)' : '(live)'));
+        } catch (e) {
+          networkResponse.textContent = `❌ Error: ${e.message}`;
+          showToast('❌ Fetch failed');
+        }
+      });
+
+      // ---------- 7. AUTH ----------
+      const authStatus = document.getElementById('authStatus');
+      const authStatusPill = document.getElementById('authStatusPill');
+      const authTokenDisplay = document.getElementById('authTokenDisplay');
+      const profileSection = document.getElementById('profileSection');
+      const profileName = document.getElementById('profileName');
+      const profileRole = document.getElementById('profileRole');
+
+      function updateAuth() {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          authStatus.textContent = 'authenticated';
+          authStatus.style.background = '#d1fae5';
+          authStatusPill.textContent = 'authenticated';
+          authStatusPill.style.background = '#d1fae5';
+          authStatusPill.style.color = '#065f46';
+          authTokenDisplay.textContent = token.substring(0, 25) + '...';
+          authTokenDisplay.title = token;
+          profileSection.style.display = 'block';
+          profileName.textContent = localStorage.getItem('username') || 'user';
+          profileRole.textContent = localStorage.getItem('role') || 'admin';
+        } else {
+          authStatus.textContent = 'guest';
+          authStatus.style.background = '#e2e8f0';
+          authStatusPill.textContent = 'guest';
+          authStatusPill.style.background = '#f1f5f9';
+          authStatusPill.style.color = '#475569';
+          authTokenDisplay.textContent = '—';
+          authTokenDisplay.title = '';
+          profileSection.style.display = 'none';
+        }
+      }
+
+      document.getElementById('loginBtn').addEventListener('click', function() {
+        const token = '🍪 session_cookie=abc123; jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('username', 'testuser');
+        localStorage.setItem('role', 'admin');
+        updateAuth();
+        showToast('✅ Logged in successfully!');
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
+        updateAuth();
+        showToast('🚪 Logged out');
+      });
+      updateAuth();
+
+      // ---------- 8. FLAKY ----------
+      let retryCount = 0, passCount = 0;
+      const retryCounter = document.getElementById('retryCounter');
+      const passCounter = document.getElementById('passCounter');
+      const successRate = document.getElementById('successRate');
+      const retryMessage = document.getElementById('retryMessage');
+      const flakyStatusPill = document.getElementById('flakyStatusPill');
+
+      function updateFlakyStats() {
+        retryCounter.textContent = retryCount;
+        passCounter.textContent = passCount;
+        const rate = retryCount > 0 ? Math.round((passCount / retryCount) * 100) : 0;
+        successRate.textContent = rate + '%';
+        successRate.style.color = rate >= 60 ? '#065f46' : '#b91c1c';
+        flakyStatusPill.textContent = retryCount > 0 ? (rate >= 60 ? 'passing' : 'flaky') : 'ready';
+        flakyStatusPill.style.background = retryCount > 0 ? (rate >= 60 ? '#d1fae5' : '#fecaca') : '#f1f5f9';
+        flakyStatusPill.style.color = retryCount > 0 ? (rate >= 60 ? '#065f46' : '#991b1b') : '#475569';
+      }
+
+      document.getElementById('flakyBtn').addEventListener('click', function() {
+        retryCount++;
+        retryMessage.textContent = '⏳ running flaky test...';
+        retryMessage.style.background = '#fef3c7';
+        const pass = Math.random() > 0.4;
+        setTimeout(() => {
+          if (pass) {
+            passCount++;
+            retryMessage.textContent = '✅ test passed! (flaky resolved)';
+            retryMessage.style.background = '#d1fae5';
+            showToast('✅ Flaky test passed!');
+          } else {
+            retryMessage.textContent = '❌ test failed — retry later (simulate flaky)';
+            retryMessage.style.background = '#fecaca';
+            showToast('❌ Flaky test failed');
+          }
+          updateFlakyStats();
+        }, 200 + Math.floor(Math.random() * 700)); // variable 200–900ms latency
+      });
+
+      document.getElementById('resetRetryBtn').addEventListener('click', function() {
+        retryCount = 0; passCount = 0;
+        updateFlakyStats();
+        retryMessage.textContent = 'ready';
+        retryMessage.style.background = '#f1f5f9';
+        showToast('🔄 Stats reset');
+      });
+      updateFlakyStats();
+
+      // ---------- 9. VISIBILITY ----------
+      const modalOverlay = document.getElementById('modalOverlay');
+      const visibilityPill = document.getElementById('visibilityPill');
+
+      document.getElementById('showModalBtn').addEventListener('click', function() {
+        modalOverlay.classList.add('show');
+        showToast('📦 Modal opened');
+      });
+
+      function closeModal() {
+        modalOverlay.classList.remove('show');
+        showToast('📦 Modal closed');
+      }
+
+      document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
+          closeModal();
+        }
+      });
+
+      document.getElementById('showToastBtn').addEventListener('click', function() {
+        showToast('🍞 This is a toast notification with a close button!');
+      });
+
+      let toggleVisible = true;
+      const toggleTarget = document.getElementById('toggleTarget');
+      document.getElementById('toggleElementBtn').addEventListener('click', function() {
+        toggleVisible = !toggleVisible;
+        if (toggleVisible) {
+          toggleTarget.classList.remove('hidden');
+          toggleTarget.innerHTML = '🟢 I am visible — test visibility assertions';
+          visibilityPill.textContent = 'visible';
+          visibilityPill.style.background = '#d1fae5';
+          visibilityPill.style.color = '#065f46';
+        } else {
+          toggleTarget.classList.add('hidden');
+          visibilityPill.textContent = 'hidden';
+          visibilityPill.style.background = '#fecaca';
+          visibilityPill.style.color = '#991b1b';
+        }
+        showToast(toggleVisible ? '✅ Element visible' : '❌ Element hidden');
+      });
+
+      // ---------- 10. SHADOW DOM ----------
+      const shadowHost = document.getElementById('shadowHost');
+      const shadowPill = document.getElementById('shadowPill');
+      let shadowToggle = false;
+
+      let shadowRoot;
+      try {
+        shadowRoot = shadowHost.shadowRoot;
+      } catch (e) {}
+
+      if (!shadowRoot) {
+        shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+        shadowRoot.innerHTML = `
+          <style>
+            .shadow-box { 
+              padding: 0.5rem 1rem; 
+              background: #1e293b; 
+              color: white; 
+              border-radius: 18px; 
+              font-size: 0.85rem; 
+              margin-top: 0.5rem;
+              cursor: pointer;
+              transition: 0.2s;
+            }
+            .shadow-box:hover { background: #0f172a; transform: scale(0.98); }
+          </style>
+          <div class="shadow-box">🌑 Click me inside shadow DOM</div>
+        `;
+        document.getElementById('shadowContent').textContent = '✅ Shadow root attached — click the box below!';
+        shadowPill.textContent = 'shadow attached';
+        shadowPill.style.background = '#d1fae5';
+        shadowPill.style.color = '#065f46';
+
+        // Add click handler to shadow element
+        const shadowDiv = shadowRoot.querySelector('.shadow-box');
+        shadowDiv.addEventListener('click', function(e) {
+          e.stopPropagation();
+          this.textContent = this.textContent.includes('🌑') ? '✨ Clicked! Shadow DOM works' : '🌑 Click me inside shadow DOM';
+          showToast('✨ Shadow DOM element clicked!');
+        });
+      } else {
+        document.getElementById('shadowContent').textContent = '✅ Shadow root already exists';
+        shadowPill.textContent = 'shadow ready';
+        shadowPill.style.background = '#d1fae5';
+        shadowPill.style.color = '#065f46';
+      }
+
+      // Click on host to toggle shadow content
+      shadowHost.addEventListener('click', function() {
+        shadowToggle = !shadowToggle;
+        if (shadowRoot) {
+          const div = shadowRoot.querySelector('.shadow-box');
+          if (div) {
+            div.textContent = shadowToggle ? '✨ Shadow DOM is interactive!' : '🌑 Click me inside shadow DOM';
+            div.style.background = shadowToggle ? '#0b6e4f' : '#1e293b';
+          }
+        }
+        showToast(shadowToggle ? '✨ Shadow content toggled' : '🌑 Shadow content reset');
+      });
+
+      // ---------- 11. RACE CONDITIONS ----------
+      const raceSubmitBtn = document.getElementById('raceSubmitBtn');
+      const raceSubmitCountEl = document.getElementById('raceSubmitCount');
+      const raceSubmitStatus = document.getElementById('raceSubmitStatus');
+      const raceStatusPill = document.getElementById('raceStatusPill');
+      let raceSubmitCount = 0;
+
+      raceSubmitBtn.addEventListener('click', async function() {
+        // Intentional bug: no immediate disable/guard before the async call resolves,
+        // so rapid double-clicks both go through. Target for "assert exactly one
+        // request fires" tests using route() call counting or click-then-immediately-
+        // assert-disabled patterns.
+        raceSubmitStatus.textContent = '⏳ submitting...';
+        raceStatusPill.textContent = 'submitting';
+        raceStatusPill.style.background = '#fef3c7';
+        await new Promise(r => setTimeout(r, 500));
+        raceSubmitCount++;
+        raceSubmitCountEl.textContent = raceSubmitCount;
+        raceSubmitStatus.textContent = '✅ submitted (order #' + raceSubmitCount + ')';
+        raceStatusPill.textContent = 'idle';
+        raceStatusPill.style.background = '#f1f5f9';
+      });
+
+      document.getElementById('triggerOverlayBtn').addEventListener('click', function() {
+        const overlay = document.getElementById('raceOverlay');
+        overlay.classList.remove('fade');
+        overlay.textContent = 'loading…';
+        setTimeout(() => overlay.classList.add('fade'), 800);
+      });
+
+      document.getElementById('overlayTargetBtn').addEventListener('click', function() {
+        showToast('🎯 Overlay target clicked');
+      });
+
+      // ---------- 12. BROWSER CONTEXTS ----------
+      document.getElementById('fileUploadInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        document.getElementById('fileUploadName').textContent = file ? file.name : 'no file selected';
+        showToast(file ? `📎 Selected: ${file.name}` : '📎 Selection cleared');
+      });
+
+      document.getElementById('downloadFileBtn').addEventListener('click', function() {
+        const blob = new Blob(
+          ['Playwright test practice file\nGenerated: ' + new Date().toISOString()],
+          { type: 'text/plain' }
+        );
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'sample.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('⬇ Download triggered: sample.txt');
+      });
+
+      // ---------- 13. API PLAYGROUND ----------
+      // These paths are deliberately NOT handled by the /api/users mock above, so a
+      // plain load will fail with a real network error — that's the point. Use
+      // page.route() in your tests to intercept and fulfill them.
+      const apiPlaygroundResponse = document.getElementById('apiPlaygroundResponse');
+      let apiPage = 1;
+
+      async function callApi(path, label) {
+        apiPlaygroundResponse.textContent = `⏳ GET ${path} ...`;
+        try {
+          const res = await fetch(path);
+          const data = await res.json();
+          apiPlaygroundResponse.textContent = `${res.status} ${res.statusText}\n` + JSON.stringify(data, null, 2);
+          showToast(`✅ ${label} responded ${res.status}`);
+        } catch (e) {
+          apiPlaygroundResponse.textContent = `❌ Error calling ${path}: ${e.message}`;
+          showToast(`❌ ${label} failed`);
+        }
+      }
+
+      document.getElementById('apiOrdersBtn').addEventListener('click', () => callApi('/api/orders', 'GET /api/orders'));
+      document.getElementById('apiErrorBtn').addEventListener('click', () => callApi('/api/error', 'GET /api/error'));
+      document.getElementById('apiPaginatedBtn').addEventListener('click', () => {
+        callApi(`/api/items?page=${apiPage}`, `GET /api/items?page=${apiPage}`);
+        apiPage++;
+      });
+      document.getElementById('apiPaginatedResetBtn').addEventListener('click', () => {
+        apiPage = 1;
+        showToast('🔄 Pagination reset to page 1');
+      });
+
+      // Initial toast
+      setTimeout(() => showToast('🧪 Test Lab ready — explore the features!'), 500);
+    })();
+  </script>
+</body>
+</html>

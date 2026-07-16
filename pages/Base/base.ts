@@ -8,7 +8,7 @@ export class BasePage{
     }
     // goto the Page
     async goto(){
-        await this.page.goto('https://bixitcrm.vercel.app/')
+       
     }
     // Fill method in Base class
     async fill(selector: string, value : string){

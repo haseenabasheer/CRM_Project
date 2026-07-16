@@ -9,6 +9,7 @@ test.describe('Login Test Suite',()=>{
     let leadsP : LeadsPage
 
     test.beforeEach(async({page})=>{
+         await page.goto('https://bixitcrm.vercel.app/')
         loginP = new LoginPage(page);
         dashboardP = new DashboardPage(page)
         leadsP = new LeadsPage(page)
